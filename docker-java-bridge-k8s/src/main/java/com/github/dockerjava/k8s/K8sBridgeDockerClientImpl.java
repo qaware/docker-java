@@ -91,6 +91,7 @@ import java.io.InputStream;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.Configuration;
 import io.kubernetes.client.util.Config;
+import com.github.dockerjava.k8s.command.VersionCmdImpl;
 
 public class K8sBridgeDockerClientImpl implements DockerClient, Closeable {
 
@@ -135,7 +136,7 @@ public class K8sBridgeDockerClientImpl implements DockerClient, Closeable {
 
     @Override
     public VersionCmd versionCmd() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new VersionCmdImpl(client);
     }
 
     @Override
@@ -519,7 +520,6 @@ public class K8sBridgeDockerClientImpl implements DockerClient, Closeable {
     }
 
     @Override
-    public void close() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void close() {
     }
 }
