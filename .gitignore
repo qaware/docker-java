@@ -1,5 +1,6 @@
 #Ignore Mac OS X DS Store
 .DS_Store
+.dccache
 
 *~
 *.swp
@@ -16,6 +17,8 @@ target
 *.iml
 *.iws
 *.ipr
+
+.vscode/
 
 # Ignore all log files
 *.log
