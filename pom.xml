@@ -94,6 +94,7 @@
 	<modules>
 		<module>docker-java-api</module>
 		<module>docker-java-bom</module>
+		<module>docker-java-bridge-k8s</module>
 		<module>docker-java-core</module>
 		<module>docker-java-transport</module>
 		<module>docker-java-transport-netty</module>
