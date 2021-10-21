@@ -11,7 +11,7 @@
 	<artifactId>docker-java-bridge-k8s</artifactId>
 	<packaging>jar</packaging>
 
-	<name>docker-java-core</name>
+	<name>docker-java-bridge-k8s</name>
 	<url>https://github.com/docker-java/docker-java</url>
 	<description>Java API Client for Docker</description>
 
