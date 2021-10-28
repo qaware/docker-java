@@ -7,6 +7,7 @@ import io.kubernetes.client.util.KubeConfig;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,7 +20,7 @@ class VersionCmdImplTest {
     @Test
     void execLocalKubeConfigClient() throws IOException {
 
-        final String kubeConfigPath = System.getProperty("user.home")+ File.separator + ".kube"+File.separator+"config";
+        final String kubeConfigPath = Paths.get(System.getProperty("user.home")+ File.separator + ".kube"+File.separator+"config").toString();
 
         ApiClient client = ClientBuilder.kubeconfig(KubeConfig.loadKubeConfig(new FileReader(kubeConfigPath))).build();
 
