@@ -7,19 +7,13 @@ import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.models.VersionInfo;
 import io.kubernetes.client.util.version.Version;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.reflect.FieldUtils;
+import java.io.IOException;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
-import static org.apache.commons.beanutils.BeanUtils.setProperty;
-import static org.apache.commons.lang.reflect.FieldUtils.*;
+import static org.apache.commons.lang.reflect.FieldUtils.writeField;
 
 public class VersionCmdImpl implements VersionCmd {
 
