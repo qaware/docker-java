@@ -2,16 +2,24 @@ package com.github.dockerjava.k8s.command;
 
 import com.github.dockerjava.api.command.VersionCmd;
 import com.github.dockerjava.api.exception.DockerException;
+import com.github.dockerjava.api.model.VersionPlatform;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.models.VersionInfo;
 import io.kubernetes.client.util.version.Version;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.reflect.FieldUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
+import static org.apache.commons.beanutils.BeanUtils.setProperty;
+import static org.apache.commons.lang.reflect.FieldUtils.*;
 
 public class VersionCmdImpl implements VersionCmd {
 
@@ -35,6 +43,24 @@ public class VersionCmdImpl implements VersionCmd {
         }
 
         com.github.dockerjava.api.model.Version dockerVersion = new com.github.dockerjava.api.model.Version();
+        try {
+            writeField(dockerVersion, "goVersion", info.getGoVersion(), true);
+            writeField(dockerVersion, "version", info.getGitVersion(), true);
+            writeField(dockerVersion, "gitCommit", info.getGitCommit(), true);
+            writeField(dockerVersion, "buildTime", info.getBuildDate(), true);
+
+            writeField(dockerVersion, "platform", new VersionPlatform().withName(info.getPlatform()), true);
+            writeField(dockerVersion, "operatingSystem", info.getPlatform().split("/")[0], true);
+            writeField(dockerVersion, "arch", info.getPlatform().split("/")[1], true);
+
+            writeField(dockerVersion, "apiVersion", info.getMajor() + "." + info.getMinor(), true);
+            writeField(dockerVersion, "version", info.getMajor() + "." + info.getMinor(), true);
+
+            writeField(dockerVersion, "experimental", Boolean.FALSE, true);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Unable to set bean field.", e);
+        }
+
         return dockerVersion;
     }
 
