@@ -24,6 +24,9 @@ jobs:
           DOCKER_VERSION: ${{matrix.dockerVersion}}
           DOCKER_HOST: ${{matrix.dockerHost}}
         run: .ci/setup_docker.sh
+      - name: start minikube
+        id: minikube
+        uses: medyagh/setup-minikube@master
       - name: Build with Maven
         env:
           DOCKER_HOST: ${{matrix.dockerHost}}
