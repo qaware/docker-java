@@ -101,9 +101,6 @@
 					<systemPropertyVariables>
 						<jdk.tls.client.protocols>TLSv1.2</jdk.tls.client.protocols>
 					</systemPropertyVariables>
-<!--					<argLine>-->
-<!--						-Djdk.tls.client.protocols=TLSv1.2-->
-<!--					</argLine>-->
 				</configuration>
 			</plugin>
 		</plugins>
