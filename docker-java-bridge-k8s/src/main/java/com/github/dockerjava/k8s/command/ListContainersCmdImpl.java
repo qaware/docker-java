@@ -1,6 +1,7 @@
 package com.github.dockerjava.k8s.command;
 
 import com.github.dockerjava.api.command.ListContainersCmd;
+import com.github.dockerjava.api.exception.DockerException;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.exception.NotModifiedException;
 import com.github.dockerjava.api.model.Container;
@@ -32,34 +33,39 @@ public class ListContainersCmdImpl implements ListContainersCmd {
         this.client = client;
     }
 
-
-    protected IllegalAccessException writePodNameTo(final Container container, V1ObjectMeta podInfo){
-        try {
-            final String podName = podInfo.getName();
-            writeField(container, "names", new String[]{podName}, true);
-        } catch (IllegalAccessException e) {
-            return e;
-        }
-        return null;
-    }
-
     @Override
     public List<Container> exec() throws NotFoundException, NotModifiedException {
-        CoreV1Api api = new CoreV1Api();
-        final List<Container> containers=new ArrayList<>();
+        final CoreV1Api api = new CoreV1Api(this.client);
+        final V1PodList podList;
         try {
-            final V1PodList  list = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
-            for (V1Pod pod : list.getItems()) {
-                final Container container = new Container();
-                containers.add(container);
-                final V1ObjectMeta meta = pod.getMetadata();
-                writePodNameTo(container,meta);
-            }
+             podList = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
         } catch (ApiException e) {
-            e.printStackTrace();
+            throw new DockerException("Could not get K8s pod list.", 500, e);
         }
+
+        final List<Container> containers=new ArrayList<>();
+        for (V1Pod pod : podList.getItems()) {
+            final Container container=createContainerOfPod(pod);
+            containers.add(container);
+        }
+
        return containers;
     }
+
+    protected Container createContainerOfPod(V1Pod pod){
+        final V1ObjectMeta meta = pod.getMetadata();
+        final Container container = new Container();
+        try {
+            final String podName = meta.getName();
+            writeField(container, "names", new String[]{podName}, true);
+
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Unable to set bean field.", e);
+        }
+        return container;
+    }
+
+
 
     @Override
     public void close() {
