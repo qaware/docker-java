@@ -52,8 +52,8 @@ public class ListContainersCmdImpl implements ListContainersCmd {
             for (V1Pod pod : list.getItems()) {
                 final Container container = new Container();
                 containers.add(container);
-                final V1ObjectMeta info = pod.getMetadata();
-                writePodNameTo(container,info);
+                final V1ObjectMeta meta = pod.getMetadata();
+                writePodNameTo(container,meta);
             }
         } catch (ApiException e) {
             e.printStackTrace();
