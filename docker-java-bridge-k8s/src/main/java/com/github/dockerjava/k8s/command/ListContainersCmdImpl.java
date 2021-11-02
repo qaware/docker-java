@@ -38,33 +38,48 @@ public class ListContainersCmdImpl implements ListContainersCmd {
         final CoreV1Api api = new CoreV1Api(this.client);
         final V1PodList podList;
         try {
-             podList = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
+            podList = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
         } catch (ApiException e) {
             throw new DockerException("Could not get K8s pod list.", 500, e);
         }
 
-        final List<Container> containers=new ArrayList<>();
+        final List<Container> containers = new ArrayList<>();
         for (V1Pod pod : podList.getItems()) {
-            final Container container=createContainerOfPod(pod);
+            final Container container = createContainerOfPod(pod);
             containers.add(container);
         }
 
-       return containers;
+        return containers;
     }
 
-    protected Container createContainerOfPod(V1Pod pod){
+    protected Container createContainerOfPod(V1Pod pod) {
         final V1ObjectMeta meta = pod.getMetadata();
         final Container container = new Container();
         try {
-            final String podName = meta.getName();
-            writeField(container, "names", new String[]{podName}, true);
+            writeField(container, "names", new String[]{meta.getName()}, true);
+            writeField(container, "created", meta.getCreationTimestamp().toEpochSecond(), true);
+            writeField(container, "id", meta.getUid(), true);
+
+
+//            writeField(container, "command", , true);
+//            writeField(container, "image", , true);
+//            writeField(container, "imageId", , true);
+//            writeField(container, "ports", new ContainerPort[]{}, true);
+            writeField(container, "labels", meta.getLabels(), true);
+            writeField(container, "status", pod.getStatus().toString(), true);
+            writeField(container, "state", pod.getStatus().toString(), true);
+//            writeField(container, "sizeRw", , true);
+//            writeField(container, "sizeRootFs", , true);
+//            writeField(container, "hostConfig", , true);
+//            writeField(container, "networkSetting", , true);
+//            writeField(container, "mounts",  , true);
+
 
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Unable to set bean field.", e);
         }
         return container;
     }
-
 
 
     @Override
