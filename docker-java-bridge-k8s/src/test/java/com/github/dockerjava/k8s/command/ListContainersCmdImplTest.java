@@ -72,6 +72,11 @@ class ListContainersCmdImplTest {
         final V1Pod pod = expectedPods.get(0);
         assertTrue(container.getNames().length > 0);
         assertEquals(pod.getMetadata().getName(),container.getNames()[0]);
+        assertEquals(pod.getMetadata().getCreationTimestamp().toEpochSecond(),container.getCreated());
+        assertEquals(pod.getMetadata().getUid(),container.getId());
+        assertEquals(pod.getMetadata().getLabels(),container.getLabels());
+        assertEquals(pod.getStatus().toString(),container.getStatus());
+        assertEquals(pod.getStatus().toString(),container.getState());
     }
 
 }
