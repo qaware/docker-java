@@ -27,6 +27,7 @@ jobs:
       - name: start minikube
         id: minikube
         uses: medyagh/setup-minikube@master
+#        run: eval $(minikube docker-env)
       - name: Build with Maven
         env:
           DOCKER_HOST: ${{matrix.dockerHost}}
