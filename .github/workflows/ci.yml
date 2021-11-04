@@ -30,6 +30,7 @@ jobs:
       - name: start minikube
         id: minikube
         uses: medyagh/setup-minikube@master
+      - name: connect minikube to docker
         run: eval $(minikube docker-env)
       - name: Build with Maven
         env:
