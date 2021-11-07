@@ -15,20 +15,27 @@ jobs:
           - { name: "over TCP", dockerHost: "tcp://127.0.0.1:2375" }
           - { name: "Docker 18.06.3", dockerVersion: "18.06.3~ce~3-0~ubuntu" }
 
+
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 8
+      - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
-          java-version: 8
+          java-version: 11
+      - name: start minikube
+        id: minikube
+        uses: medyagh/setup-minikube@master
+        with:
+          driver: docker
+      - name: connect minikube to docker
+        run: eval $(minikube docker-env)
       - name: Configure Docker
         env:
           DOCKER_VERSION: ${{matrix.dockerVersion}}
-          DOCKER_HOST: ${{matrix.dockerHost}}
         run: .ci/setup_docker.sh
       - name: Build with Maven
-        env:
-          DOCKER_HOST: ${{matrix.dockerHost}}
+#        env:
+#          DOCKER_HOST: ${{matrix.dockerHost}}
         run: ./mvnw --no-transfer-progress verify
       - name: Aggregate test reports with ciMate
         if: always()

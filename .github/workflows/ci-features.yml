@@ -6,12 +6,12 @@ jobs:
   build:
     runs-on: ubuntu-18.04
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include:
           - { name: "default" }
-          - { name: "over TCP", dockerHost: "tcp://127.0.0.1:2375" }
-          - { name: "Docker 18.06.3", dockerVersion: "18.06.3~ce~3-0~ubuntu" }
+#          - { name: "over TCP", dockerHost: "tcp://127.0.0.1:2375" }
+#          - { name: "Docker 18.06.3", dockerVersion: "18.06.3~ce~3-0~ubuntu" }
 
     steps:
       - uses: actions/checkout@v2
@@ -27,6 +27,10 @@ jobs:
       - name: start minikube
         id: minikube
         uses: medyagh/setup-minikube@master
+#        with:
+#          driver: docker
+#     - name: connect minikube to docker
+#       run: eval $(minikube docker-env)
       - name: Build with Maven
         env:
           DOCKER_HOST: ${{matrix.dockerHost}}
