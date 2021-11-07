@@ -22,21 +22,17 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Configure Docker
-        env:
-          DOCKER_VERSION: ${{matrix.dockerVersion}}
-          DOCKER_HOST: ${{matrix.dockerHost}}
-        run: .ci/setup_docker.sh
       - name: start minikube
         id: minikube
-        env:
-          DOCKER_VERSION: ${{matrix.dockerVersion}}
-          DOCKER_HOST: ${{matrix.dockerHost}}
         uses: medyagh/setup-minikube@master
         with:
           driver: docker
       - name: connect minikube to docker
         run: eval $(minikube docker-env)
+      - name: Configure Docker
+        env:
+          DOCKER_VERSION: ${{matrix.dockerVersion}}
+        run: .ci/setup_docker.sh
       - name: Build with Maven
         env:
           DOCKER_HOST: ${{matrix.dockerHost}}
